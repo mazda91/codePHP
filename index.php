@@ -4,6 +4,7 @@ require_once("load.php");
 require("controller/backend/NetworkController.php");
 require("controller/backend/UserController.php");
 require("controller/backend/GroupController.php");
+require("controller/backend/AccountController.php");
 
 try{                                                                           
     if(isset($_GET['service'])){
@@ -18,7 +19,7 @@ try{
                 $data->currencyName = 'euro';
                 $data->currencySymbol = '€';
                 $data->systemAccount = 'systemAccount';
-                $data->userAccount = 'userAccount';
+                $data->adminAccount = 'adminAccount';
                 createNetwork($network,$data);
             }
             elseif($_GET['action'] == 'remove'){
@@ -33,29 +34,52 @@ try{
         }
         elseif($_GET['service'] == 'user'){
             if($_GET['action'] == 'create'){
-                if(2==2){ //@TODO : check that all fields are valid
+                if(2==2){ //@TODO : check that all fields are valid    
                     $user = new stdclass();
-                    $user->email = 'fournilNotreDame@hotmail.fr';
+                    $user->email = 'fournilNotreDame@hotmail.fr';  
                     $user->username = 'leFournil';
                     $user->name = $user->username;
+                    $user->login = $user->username;
                     $user->hideEmail = true;
                     $user->skipActivationEmail = true;
 
-                    $user->group = groupData('Test');
-//                    print_r($user->group);
                     $password = new stdclass();
-                    $password->assignPassword = true;
+                    $password->assign = true;
                     $password->value = 'pain';
                     $password->confirmationValue = 'pain';
-
+                    $password->forceChange = true;
                     $user->passwords = $password;
-                    createUser($user);
+                    //                      $user->loginPassword ="pain";
+                    //$user->assign = true;
+                    if($_GET['status'] == 'admin'){//by default, the group is 'Global administrators'
+                        createAdmin($user);
+                    }
+                    else{//if not admin then user
+                        $groupName = 'Test2';
+                        createMember($user,$groupName);
+                    }
                 }
+                else{//some invalid fields
+                    throw new Exception("Error : invalid fields given");
+                } 
             }
             elseif($_GET['action'] == 'get'){
                 if(2==2){ //@TODO : check that all fields are valid
-                    $name = 'elefan'; 
+                    $name = 'painAuBeurre'; 
                     getUser($name);
+                }
+            }
+            elseif($_GET['action'] == 'changeStatus'){
+                if(2==2){ //@TODO : check that all fields are valid
+                    $listNames = array('elefan'); 
+                    changeStatusMembers($listNames,$_GET['status']);
+                }
+            }
+        }
+        elseif($_GET['service'] == 'account'){
+            if($_GET['action'] == 'create'){
+                if(2==2){ //@TODO : check that all fields are valid
+                   createAccount($product); 
                 }
             }
         }
@@ -85,7 +109,7 @@ try{
                 if(2==2){ //@TODO : check that all fields are valid
                     //search for the group
                     $query = new stdclass();
-                    $name = 'Users';
+                    $name = 'Admins';
                     $id = groupID($name);
 
                     modifyGroup($id);

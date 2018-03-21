@@ -50,7 +50,7 @@ class GroupManager extends Manager
         $query = new stdclass();
         $query->name = $name;
         $res = $groupService->search($query);
-        return $res;
+        return $res->pageItems[0];
     }
     public final function getListGroups()
     {
