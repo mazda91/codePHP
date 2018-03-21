@@ -5,6 +5,7 @@ require("controller/backend/NetworkController.php");
 require("controller/backend/UserController.php");
 require("controller/backend/GroupController.php");
 require("controller/backend/AccountController.php");
+require("controller/backend/ProductController.php");
 
 try{                                                                           
     if(isset($_GET['service'])){
@@ -22,7 +23,13 @@ try{
                 $data->adminAccount = 'adminAccount';
                 createNetwork($network,$data);
             }
-            elseif($_GET['action'] == 'remove'){
+            elseif($_GET['action'] == 'get'){
+                getNetwork('TestCairn3');
+            } 
+             elseif($_GET['action'] == 'switch'){
+               switchNetwork('TestCairn3');
+            } 
+           elseif($_GET['action'] == 'remove'){
                 removeNetwork('testCairn4');
             } 
             elseif($_GET['action'] == 'removeall'){
@@ -65,7 +72,8 @@ try{
             }
             elseif($_GET['action'] == 'get'){
                 if(2==2){ //@TODO : check that all fields are valid
-                    $name = 'painAuBeurre'; 
+
+                    $name = 'Santo'; 
                     getUser($name);
                 }
             }
@@ -79,10 +87,29 @@ try{
         elseif($_GET['service'] == 'account'){
             if($_GET['action'] == 'create'){
                 if(2==2){ //@TODO : check that all fields are valid
-                   createAccount($product); 
+                    createAccount($product,$ownerName); 
                 }
             }
         }
+        elseif($_GET['service'] == 'product'){
+            if($_GET['action'] == 'create'){
+                if(2==2){ //@TODO : check that all fields are valid
+                    createProduct($product); 
+                }
+            }
+            elseif($_GET['action'] == 'get'){
+                if(2==2){ //@TODO : check that all fields are valid
+                    Cyclos\Configuration::setRootUrl("http://127.0.0.1:8080/cyclos/TestCairn3/");
+                    Cyclos\Configuration::setAuthentication("mazouthm", "admin");
+
+                    $productName = 'Members';
+                    $ownerName = NULL;//'Users';
+                    $product = productData($productName,$ownerName); 
+                    print_r($product);
+                }
+            }
+        }
+
         elseif($_GET['service'] == 'group'){
             if($_GET['action'] == 'create'){
                 if(2==2){ //@TODO : check that all fields are valid

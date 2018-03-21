@@ -11,6 +11,13 @@ class NetworkManager extends Manager
 
     }
 
+    public final function getNetwork($name)
+    {
+        $networkService = new Cyclos\NetworkService();
+        return $networkService->getData($this->getNetworkID($name));
+    }
+
+
     public final function removeNetwork($id)
     {
         $networkService = new Cyclos\NetworkService();

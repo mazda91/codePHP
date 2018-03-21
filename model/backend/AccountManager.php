@@ -4,11 +4,13 @@ require_once("model/Manager.php");
 
 class AccountManager extends Manager
 {
-    public final function createAccount($product,$type)
+    public final function createAccount($product,$groupID)
     {
         $productService = new Cyclos\ProductsUserService();
 
-        return $productService->assign($product,$group);
+        $owner = new stdclass();
+        $owner->id = $groupID;
+        return $productService->assign($product,$owner);
 
     }
 
