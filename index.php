@@ -126,10 +126,25 @@ try{
                     $to = 'Santo3';
                     $amount = 1;
                     $count = 4; 
-                    payment($from,$to,$amount,$count);
+
+                    if($_GET['type'] == 'unique'){
+                        $count = 1;
+                    }
+                    else{
+                        $count = 4;
+                    }
+                    payment($from,$to,$amount,$_GET['type'],$count);
                 }
             }
-        }
+            elseif($_GET['action'] == 'fee'){
+                if(2==2){//@TODO: check that all fields are valid
+                    if($_GET['type'] == 'account'){
+
+                    }
+                    elseif($_GET['type'] == 'transfer'){
+
+                    }
+       }
 
         elseif($_GET['service'] == 'group'){
             if($_GET['action'] == 'create'){
