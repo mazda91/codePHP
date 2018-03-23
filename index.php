@@ -7,6 +7,8 @@ require("controller/backend/GroupController.php");
 require("controller/backend/AccountController.php");
 require("controller/backend/ProductController.php");
 
+require("controller/frontend/BankingController.php");
+
 try{                                                                           
     if(isset($_GET['service'])){
         if($_GET['service'] == 'network'){
@@ -26,10 +28,10 @@ try{
             elseif($_GET['action'] == 'get'){
                 getNetwork('TestCairn3');
             } 
-             elseif($_GET['action'] == 'switch'){
-               switchNetwork('TestCairn3');
+            elseif($_GET['action'] == 'switch'){
+                switchNetwork('TestCairn3');
             } 
-           elseif($_GET['action'] == 'remove'){
+            elseif($_GET['action'] == 'remove'){
                 removeNetwork('testCairn4');
             } 
             elseif($_GET['action'] == 'removeall'){
@@ -54,7 +56,6 @@ try{
                     $password->assign = true;
                     $password->value = 'pain';
                     $password->confirmationValue = 'pain';
-                    $password->forceChange = true;
                     $user->passwords = $password;
                     //                      $user->loginPassword ="pain";
                     //$user->assign = true;
@@ -62,7 +63,8 @@ try{
                         createAdmin($user);
                     }
                     else{//if not admin then user
-                        $groupName = 'Test2';
+                        switchNetwork('TestCairn3');
+                        $groupName = 'group1';
                         createMember($user,$groupName);
                     }
                 }
@@ -72,8 +74,8 @@ try{
             }
             elseif($_GET['action'] == 'get'){
                 if(2==2){ //@TODO : check that all fields are valid
-
-                    $name = 'Santo'; 
+                    switchNetwork('TestCairn3');
+                    $name = 'Santo3'; 
                     getUser($name);
                 }
             }
@@ -92,20 +94,39 @@ try{
             }
         }
         elseif($_GET['service'] == 'product'){
-            if($_GET['action'] == 'create'){
+            if($_GET['action'] == 'assign'){
                 if(2==2){ //@TODO : check that all fields are valid
-                    createProduct($product); 
+                    switchNetwork('TestCairn3');
+                    $product = new stdclass();
+
+                    $product->name = 'stup';
+                    //                    $product->nature = new stdclass();
+                    $product->nature = 'MEMBER';
+
+                    $groupName = 'group1';
+                    createProduct($product,$groupName); 
                 }
             }
             elseif($_GET['action'] == 'get'){
                 if(2==2){ //@TODO : check that all fields are valid
-                    Cyclos\Configuration::setRootUrl("http://127.0.0.1:8080/cyclos/TestCairn3/");
-                    Cyclos\Configuration::setAuthentication("mazouthm", "admin");
+                    switchNetwork('TestCairn3');
 
                     $productName = 'Members';
                     $ownerName = NULL;//'Users';
                     $product = productData($productName,$ownerName); 
                     print_r($product);
+                }
+            }
+        }
+        elseif($_GET['service'] == 'banking'){
+            if($_GET['action'] == 'payment'){
+                if(2==2){//@TODO: check that all fields are valid
+                    switchNetwork('TestCairn3');
+                    $from = 'SYSTEM';
+                    $to = 'Santo3';
+                    $amount = 1;
+                    $count = 4; 
+                    payment($from,$to,$amount,$count);
                 }
             }
         }

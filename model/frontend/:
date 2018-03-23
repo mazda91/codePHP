@@ -1,0 +1,41 @@
+<?php
+
+require_once("load.php");                                                      
+require_once("model/Manager.php");
+
+class BankingManager extends Manager{
+
+    public final function makeRecurringPayment($from,$to,$amount,$count)
+    {
+        $transferTypeService = new Cyclos\TransferTypeService();
+        $query = new stdclass();
+        $query->currency = 'cairn';
+        $res = $transferTypeService->search($query);
+        print_r($res->pageItems[1]->internalName);
+        $transactionService = new Cyclos\TransactionService();
+        $paymentService = new Cyclos\PaymentService();
+
+        $paymentType = new stdclass();
+        $paymentType->internalName  = 'toUser';
+        $paymentType->name = 'Payment from systemAccount';
+        $data = $transactionService->getPaymentData($from, array('username' => $to),$paymentType);
+//        print_r($data);
+        $parameters = new stdclass();
+        $parameters->from = $data->from;
+        $parameters->to = $data->to;
+        $parameters->type = $data->paymentTypes[0];
+        $parameters->amount = $amount;
+        $parameters->description = "Test from system to user";
+
+        //        $parameters->firstOccurrenceDate = ;
+        $parameters->firstOccurenceIsNow = true;
+        $parameters->occurrenceInterval = new stdclass();
+        $parameters->occurrenceInterval->field = 'SECONDS'; 
+        $parameters->occurrenceInterval->amount = $count;
+        $parameters->occurrencesCount = $count;
+        $parameters->currency = 'cairn';
+        $paymentResult = $paymentService->perform($parameters);
+        print_r($paymentResult);
+
+    }
+}
